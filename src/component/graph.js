@@ -7,12 +7,15 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/Icon';
 import InputAdornment from '@mui/material/InputAdornment';
 import { SearchOutlined } from '@mui/icons-material';
+import { useSwipeable } from "react-swipeable";
 //import IconButton from '@mui/material/Icon/s';
 import "../assets/styles/graph.css";
+import SideBar from "./sidebar";
 // import SpriteText from "three-spritetext";
 // import * as THREE from '../utils/css2D';
 // import * as THREE from '//cdn.rawgit.com/mrdoob/three.js/master/examples/jsm/renderers/CSS2DRenderer.js';
 // import * as THREE from '../utils/three';
+import axios from 'axios';
 import * as THREE from 'three';
 import SpriteText from "three-spritetext";
 function ValueLabelComponent(props) {
@@ -24,14 +27,54 @@ function ValueLabelComponent(props) {
       </Tooltip>
     );
   }
+  const swipeOpenMenuStyles = {
+    float: "left",
+    position: "fixed",
+    width: "33%",
+    height: "100%",
+    // border: "2px dashed gray"
+  };
 export const Graph = () => {
   const ref = createRef();
   const [pwidth, setPwidth] = useState(20);
   const [cwidth, setCwidth] = useState(20);
   const [gcwidth, setGcwidth] = useState(20);
-
+  const [posts, setPosts] = useState([]);
+  const [node, links] = useState([]);
+  const [image, setImages] = useState([]);
+  const [color, setColors] = useState([]);
+  const [users, setUsers] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isOpen, setOpen] = React.useState(false);
+  const handlers = useSwipeable({
+    trackMouse: true,
+    onSwipedRight: () => setOpen(true)
+  });
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        // 요청이 시작 할 때에는 error 와 users 를 초기화하고
+        setError(null);
+        setUsers(null);
+        // loading 상태를 true 로 바꿉니다.
+        setLoading(true);
+        const response = await axios.get(
+          'http://localhost:5000/word/similarity/soft/10/0'
+        );
+        console.log(response.data);
+        //setUsers(response.data); // 데이터는 response.data 안에 들어있습니다.
+      } catch (e) {
+        setError(e);
+      }
+      setLoading(false);
+    };
+
+    fetchUsers();
+
+
     async function dynamicImportModule() {
+      
       const ForceGraph3D = await (await import("3d-force-graph")).default;
       const myGraph = ForceGraph3D(
       //   {
@@ -447,42 +490,14 @@ export const Graph = () => {
   }, []);
   return (
     <div className="graph">
+      <div {...handlers} style={swipeOpenMenuStyles} />
+      <SideBar
+        isOpen={isOpen}
+        onStateChange={s => setOpen(s.isOpen)}
+        pageWrapId={"page-wrap"}
+        outerContainerId={"App"}
+      />
       <div ref={ref}></div>
-      <div className="search">
-        <TextField
-          id="outlined-basic"
-          variant="outlined"
-          fullWidth
-          label="Search"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment>
-                <IconButton>
-                  <SearchOutlined />
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-        />
-      </div>
-      <Typography gutterBottom>A</Typography>
-      <Slider
-        valueLabelDisplay="auto"
-        components={{
-          ValueLabel: ValueLabelComponent,
-        }}
-        aria-label="custom thumb label"
-        defaultValue={20}
-      />
-      <Typography gutterBottom>B</Typography>
-      <Slider
-        valueLabelDisplay="auto"
-        components={{
-          ValueLabel: ValueLabelComponent,
-        }}
-        aria-label="custom thumb label"
-        defaultValue={20}
-      />
     </div>
   );
 };
