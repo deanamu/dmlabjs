@@ -10,9 +10,15 @@ const Main = (props) => {
   
 	return (
 		<>
-			<div className="search">
+    <div>
+    <div class="up">
       {/* <a href="https://manuel.pinto.dev" class="text-decoration-none"> </a>*/}
-      <h3>안녕하세요. 메인페이지 입니다.</h3>
+      <h3>color emotions</h3>
+      <h3>단어를 검색해 보세요</h3>
+   
+      </div>
+      <div class="down">
+        <div>
         <TextField
           id="outlined-basic"
           variant="outlined"
@@ -32,9 +38,11 @@ const Main = (props) => {
             <ul>
 				<Link to="/graph/"> <Button>버튼</Button></Link>
 			</ul>
-      </div>
-      <div class="right">
-  </div> 
+        </div>
+      
+  </div>
+    </div>
+			 
 		</>
 	);
 };

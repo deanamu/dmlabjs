@@ -1,0 +1,18 @@
+body {
+    margin: 1px;
+  }
+  
+  .dg.main.a {
+    margin-top: 1px;
+    margin-right: 0;
+  }
+  
+  .dg.main .close-button.close-bottom {
+    padding: 5px;
+    background-color: #d03939;
+  }
+  
+  select {
+    width: 100%;
+  }
+  
