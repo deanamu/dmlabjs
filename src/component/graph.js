@@ -1,499 +1,209 @@
-// 돌아가는것
-// import React from "react";
-// import Slider, { SliderThumb } from '@mui/material/Slider';
-// import { createRef, useEffect, useState } from "react";
-// import Typography from '@mui/material/Typography';
-// import TextField from "@mui/material/TextField";
-// import Tooltip from '@mui/material/Tooltip';
-// import IconButton from '@mui/material/Icon';
-// import InputAdornment from '@mui/material/InputAdornment';
-// import { SearchOutlined } from '@mui/icons-material';
-// import { useSwipeable } from "react-swipeable";
-// //import IconButton from '@mui/material/Icon/s';
-// import "../assets/styles/graph.css";
-// import SideBar from "./sidebar";
-// // import SpriteText from "three-spritetext";
-// // import * as THREE from '../utils/css2D';
-// // import * as THREE from '//cdn.rawgit.com/mrdoob/three.js/master/examples/jsm/renderers/CSS2DRenderer.js';
-// // import * as THREE from '../utils/three';
-// import axios from 'axios';
-// import * as THREE from 'three';
+//돌아가는것
+import React from "react";
+import Slider, { SliderThumb } from '@mui/material/Slider';
+import { createRef, useEffect, useState } from "react";
+import Typography from '@mui/material/Typography';
+import TextField from "@mui/material/TextField";
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/Icon';
+import InputAdornment from '@mui/material/InputAdornment';
+import { SearchOutlined } from '@mui/icons-material';
+import { useSwipeable } from "react-swipeable";
+//import IconButton from '@mui/material/Icon/s';
+import "../assets/styles/graph.css";
+import SideBar from "./sidebar";
 // import SpriteText from "three-spritetext";
-// const swipeOpenMenuStyles = {
-//     float: "left",
-//     position: "fixed",
-//     width: "33%",
-//     height: "100%",
-//     border: "2px dashed gray"
-//   };
-// export const Graph = () => {
-//   const ref = createRef();
-//   const [pwidth, setPwidth] = useState(20);
-//   const [cwidth, setCwidth] = useState(20);
-//   const [gcwidth, setGcwidth] = useState(20);
-//   const [posts, setPosts] = useState([]);
-//   const [node, links] = useState([]);
-//   const [image, setImages] = useState([]);
-//   const [color, setColors] = useState([]);
-//   const [users, setUsers] = useState(null);
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
-//   const [isOpen, setOpen] = React.useState(false);
-//   const handlers = useSwipeable({
-//     //trackMouse: true,
-//     onSwipedRight: () => setOpen(true)
-//   });
-//   useEffect(() => {
-//     const fetchUsers = async () => {
-//       try {
-//         // 요청이 시작 할 때에는 error 와 users 를 초기화하고
-//         setError(null);
-//         setUsers(null);
-//         // loading 상태를 true 로 바꿉니다.
-//         setLoading(true);
-//         const response = await axios.get(
-//           'http://localhost:5000/word/similarity/soft/10/0'
-//         );
-//         console.log(response.data);
-//         //setUsers(response.data); // 데이터는 response.data 안에 들어있습니다.
-//       } catch (e) {
-//         setError(e);
-//       }
-//       setLoading(false);
-//     };
+// import * as THREE from '../utils/css2D';
+// import * as THREE from '//cdn.rawgit.com/mrdoob/three.js/master/examples/jsm/renderers/CSS2DRenderer.js';
+// import * as THREE from '../utils/three';
+import axios from 'axios';
+import * as THREE from 'three';
+import SpriteText from "three-spritetext";
+const swipeOpenMenuStyles = {
+    float: "left",
+    position: "fixed",
+    width: "33%",
+    height: "100%",
+    border: "2px dashed gray"
+  };
+export const Graph = () => {
+  const ref = createRef();
+  const [pwidth, setPwidth] = useState(20);
+  const [cwidth, setCwidth] = useState(20);
+  const [gcwidth, setGcwidth] = useState(20);
+  const [posts, setPosts] = useState([]);
+  const [node, links] = useState([]);
+  const [image, setImages] = useState([]);
+  const [color, setColors] = useState([]);
+  const [users, setUsers] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isOpen, setOpen] = React.useState(false);
+  var gData = {
+    nodes: [],
+    links: []
+};
+var nodedic={}
+  const handlers = useSwipeable({
+    //trackMouse: true,
+    onSwipedRight: () => setOpen(true)
+  });
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        // 요청이 시작 할 때에는 error 와 users 를 초기화하고
+        setError(null);
+        setUsers(null);
+        // loading 상태를 true 로 바꿉니다.
+        setLoading(true);
+        const response = await axios.get(
+          'http://localhost:5000/word/similarity/soft/10/0'
+        );
+        console.log(response.data);
+        //setUsers(response.data); // 데이터는 response.data 안에 들어있습니다.
+      } catch (e) {
+        setError(e);
+      }
+      setLoading(false);
+    };
 
-//     fetchUsers();
+    fetchUsers();
 
 
-//     async function dynamicImportModule() {
+    async function dynamicImportModule() {
       
-//       const ForceGraph3D = await (await import("3d-force-graph")).default;
-//       const myGraph = ForceGraph3D(
-//       //   {
-//       //   extraRenderers: [new THREE.CSS2DRenderer()]
-//       // }
-//       );
+      const ForceGraph3D = await (await import("3d-force-graph")).default;
+      const myGraph = ForceGraph3D(
+      //   {
+      //   extraRenderers: [new THREE.CSS2DRenderer()]
+      // }
+      );
      
-//       let bodyWidth = document.querySelector("body").clientWidth;
-//       console.log("bodyWidth ", bodyWidth);
-//       // let clientHeight = document.querySelector("body").clientHeight;
-//       // if (bodyWidth < 1000) {
-//       //   bodyWidth = bodyWidth - 50;
-//       // } else {
-//       //   bodyWidth = 1200;
-//       // }
-//       // if (clientHeight < 800) {
-//       //   clientHeight = clientHeight - 300;
-//       // }
+     
+      const datas = `{
+        "keyword": "soft",
+        "result": [
+          {
+            "coordinate": [
+              0.022815335541963577, 0.005481179337948561, 0.03207440301775932
+            ],
+            "keyword": "thin",
+            "similarity": 0.7951185703277588
+          },
+          {
+            "coordinate": [
+              0.047959327697753906, 0.01577720232307911, 0.038388170301914215
+            ],
+            "keyword": "thicker",
+            "similarity": 0.755044162273407
+          },
+          {
+            "coordinate": [
+              0.0018156722653657198, 0.005652955267578363, 0.11265847831964493
+            ],
+            "keyword": "cream",
+            "similarity": 0.7522318363189697
+          },
+          {
+            "coordinate": [
+              0.010016270913183689, 0.028387313708662987, 0.04686044156551361
+            ],
+            "keyword": "thick",
+            "similarity": 0.7327376008033752
+          },
+          {
+            "coordinate": [
+              0.07132766395807266, 0.041951533406972885, 0.07754577696323395
+            ],
+            "keyword": "skin",
+            "similarity": 0.722896158695221
+          },
+          {
+            "coordinate": [
+              0.00847446545958519, 0.027505049481987953, 0.0379103384912014
+            ],
+            "keyword": "thinner",
+            "similarity": 0.7122347354888916
+          },
+          {
+            "coordinate": [
+              0.04117174446582794, 0.04774203151464462, 0.013867032714188099
+            ],
+            "keyword": "rub",
+            "similarity": 0.7010282278060913
+          },
+          {
+            "coordinate": [
+              -0.08505047857761383, 0.013168980367481709, 0.1654481589794159
+            ],
+            "keyword": "creamy",
+            "similarity": 0.6946989297866821
+          },
+          {
+            "coordinate": [
+              -0.05271998792886734, 0.03519152104854584, 0.05347294360399246
+            ],
+            "keyword": "texture",
+            "similarity": 0.6915264129638672
+          },
+          {
+            "coordinate": [
+              -0.08255491405725479, 0.03262241557240486, 0.14705143868923187
+            ],
+            "keyword": "thicken",
+            "similarity": 0.6804180145263672
+          }
+        ]
+      }
+      `
+      const data = JSON.parse(datas);
+      var j=0;
+      for(var t of data.result) //node를 만들기 위해서 for문
+      {
+          for(var t2 of t.result)
+          {
+              console.log(t2.keyword) 
+              console.log(t2.similarity) 
+              console.log(t2.coordinate) 
+              console.log(t2.coordinate[0]) 
+              if (!(Object.values(nodedic).indexOf(t2.keyword) > -1)) //이미 있는것은 추가 안함
+              {
+                  gData.nodes.push({id:t2.keyword, name:t2.keyword,x:t2.coordinate[0],y:t2.coordinate[1],z:t2.coordinate[2]});
+                  nodedic[t2.keyword]=t2.keyword;
+                  j++;
+              }
+          }
+      }
 
-//       let nodes = [
-//         "Values",
-//         "Freedom",
-//         "Respect",
-//         "Equality",
-//         // "Humans",
-//         // "Sustainability",
-//         // "Reconnection",
-//         "Accessibility",
-//         // "Relate",
-//         "Love",
-//         "Openness",
-//         "Education",
-//         "Culture",
-//         // "Open Source",
-//         // "Decentralized",
-//         // "Purposefulness",
-//         // "Inclusiveness",
-//         // "Trust",
-//         "Repatriation",
-//       ];
-//       let nodes2 = [
-//         "People",
-//         "Scanner",
-//         "Artist",
-//         "Sculptor",
-//         "Designer",
-//         "Painter",
-//         "Engineer",
-//         "Maker",
-//         "Location",
-//         "Writer",
-//         "Author",
-//         "Storyteller",
+      for(var t of data.result) //링크를 만들기 위해서
+      {
+          for(var t2 of t.result)
+          {
+              gData.links.push({source:t.keyword,target:t2.keyword});
+          }
+      }
+      const graph = myGraph(ref.current);
+     
 
-//         // "Photographer",
-//         // "Remixer",
-//         // "Curator",
-//         // "Animator",
-//         // "Illustrator",
-//         // "XR Designer",
-//       ];
-//       let allNodes = [
-//         {
-//           id: "Test",
-//           label: "",
-//           size: 60,
-//           // size: 20,
-//         },
-//         {
-//           id: "Artefact",
-//           label: "",
-//           size: 60,
-//           // size: 20,
-//         },
-//         ...nodes.map((node) => ({
-//           id: node,
-//           label: node,
-//           caption: node,
-//           type: "roles",
-//           size: 6,
-//         })),
-//         ...nodes2.map((node) => ({
-//           id: node,
-//           label: node,
-//           caption: node,
-//           check: "values",
-//           size: 6,
-//         })),
-//       ];
-//       const graph = myGraph(ref.current);
-//       let rotating;
+      graph
+        .graphData(gData);
+    }
+    dynamicImportModule();
+  }, []);
+  return (
+    <div className="result">
+      <div {...handlers} style={swipeOpenMenuStyles} />
+      <SideBar
+        isOpen={isOpen}
+        onStateChange={s => setOpen(s.isOpen)}
+        pageWrapId={"page-wrap"}
+        outerContainerId={"App"}
+      />
+      <div className="graph">
+        <div ref={ref}></div>
+      </div>
+    </div>
+  );
+};
 
-//       graph
-//         .graphData({
-//           nodes: allNodes,
-//           links: [
-//             {
-//               target: "Test",
-//               source: "Artefact",
-//               distance: 30,
-//             },
-//             {
-//               target: "Values",
-//               source: "Test",
-//               distance: 20,
-//             },
-//             {
-//               target: "Freedom",
-//               source: "Values",
-//               distance: 20,
-//             },
-//             {
-//               target: "Respect",
-//               source: "Values",
-//               distance: 20,
-//             },
-//             {
-//               target: "Repatriation",
-//               source: "Respect",
-//               distance: 40,
-//             },
-//             {
-//               target: "Accessibility",
-//               source: "Values",
-//               distance: 20,
-//             },
-//             {
-//               target: "Openness",
-//               source: "Accessibility",
-//               distance: 30,
-//             },
-//             {
-//               target: "Education",
-//               source: "Values",
-//               distance: 20,
-//             },
-//             {
-//               target: "Love",
-//               source: "Values",
-//               distance: 20,
-//             },
-//             {
-//               target: "Equality",
-//               source: "Love",
-//               distance: 40,
-//             },
-//             {
-//               target: "Culture",
-//               source: "Love",
-//               distance: 40,
-//             },
-//             {
-//               target: "People",
-//               source: "Test",
-//               distance: 30,
-//             },
-//             {
-//               target: "Scanner",
-//               source: "People",
-//               distance: 60,
-//             },
-//             {
-//               target: "Artist",
-//               source: "People",
-//               distance: 40,
-//             },
-//             {
-//               target: "Sculptor",
-//               source: "Artist",
-//               distance: 50,
-//             },
-//             {
-//               target: "Designer",
-//               source: "Artist",
-//               distance: 50,
-//             },
-//             {
-//               target: "Painter",
-//               source: "Artist",
-//               distance: 50,
-//             },
-//             {
-//               target: "Engineer",
-//               source: "People",
-//               distance: 40,
-//             },
-//             {
-//               target: "Maker",
-//               source: "Engineer",
-//               distance: 50,
-//             },
-//             {
-//               target: "Location",
-//               source: "People",
-//               distance: 40,
-//             },
-//             {
-//               target: "Writer",
-//               source: "People",
-//               distance: 40,
-//             },
-//             {
-//               target: "Writer",
-//               source: "People",
-//               distance: 40,
-//             },
-//             {
-//               target: "Author",
-//               source: "Writer",
-//               distance: 50,
-//             },
-//             {
-//               target: "Storyteller",
-//               source: "Writer",
-//               distance: 50,
-//             },
-//             // ...allNodes.map((node, i, arr) => {
-//             //   return arr.map((n, j) => {
-//             //     if (
-//             //       j > i &&
-//             //       i < arr.length - 1 &&
-//             //       j < allNodes.length &&
-//             //       i === 0
-//             //     ) {
-//             //       return {
-//             //         target: allNodes[i],
-//             //         source: arr[j],
-//             //         distance: j * 2 + i,
-//             //       };
-//             //     }
-//             //   });
-//             // }),
-//             // {
-//             //   target: "Values",
-//             //   source: "Artefact",
-//             //   distance: 20,
-//             // },
-//             // {
-//             //   target: "Freedom",
-//             //   source: "Values",
-//             //   distance: 30,
-//             // },
-//             // {
-//             //   target: "Respect",
-//             //   source: "Values",
-//             //   distance: 30,
-//             // },
-//             // {
-//             //   target: "Respect",
-//             //   source: "Repatriation",
-//             //   distance: 50,
-//             // },
-//             // {
-//             //   target: "Accessibility",
-//             //   source: "Values",
-//             //   distance: 30,
-//             // },
-//             // {
-//             //   target: "Openness",
-//             //   source: "Accessibility",
-//             //   distance: 50,
-//             // },
-//             // {
-//             //   target: "Education",
-//             //   source: "Values",
-//             //   distance: 30,
-//             // },
-//             // {
-//             //   target: "Love",
-//             //   source: "Values",
-//             //   distance: 30,
-//             // },
-//             // {
-//             //   target: "Equality",
-//             //   source: "Love",
-//             //   distance: 50,
-//             // },
-//             // {
-//             //   target: "Culture",
-//             //   source: "Love",
-//             //   distance: 50,
-//             // },
-//           ]
-
-//             .flatMap((d) => d)
-//             .filter((d) => d),
-//         })
-//         .onNodeHover((node) => {
-//           if (rotating && node) {
-//             clearInterval(rotating);
-//           } else {
-//             rotate();
-//           }
-//           ref.current.style.cursor = node ? "pointer" : null;
-//           ref.current.style.color = "#000";
-//         })
-//         .nodeColor((node) => {
-//           return node.type === "roles"
-//             ? "#ff0000"
-//             : node.id === "Test"
-//             ? "blue"
-//             : "#000000";
-//         })
-//         .nodeVal("size")
-//         .linkColor((node) => {
-//           console.log('node ', node);
-//           return  node.target === "Test"
-//             ? "#fff"
-//             : "#000000";
-//         })
-
-//         .backgroundColor("#f5f5f5")
-//         // .nodeVisibility(true)
-//         .nodeLabel(
-//           (node) =>{
-//             console.log('node ', node);
-//            return `<span style="font-weight: bold;color: #000">${node.label}</span>`
-//           }
-//         )
-//         // .nodeThreeObject(node => {
-//         //   const nodeEl = document.createElement('div');
-//         //   nodeEl.textContent = node.id;
-//         //   // nodeEl.style.color = node.color;
-//         //   nodeEl.className = 'node-label';
-//         //   return new THREE.CSS2DObject(nodeEl);
-//         // })
-//         // .nodeThreeObjectExtend(true)
-//         .nodeThreeObject(node => {
-//           const sprite = new SpriteText(node.id);
-//           sprite.material.depthWrite = false; // make sprite background transparent
-//           sprite.color = 'black';
-//           sprite.textHeight = 14;
-//           sprite.zIndex = -99;
-//           sprite.fontWeight = 'bold';
-//           return node.id === 'Artefact' ? sprite: null;
-//         })
-//         // .nodeThreeObject(node => {
-//         //   const imgTexture = new THREE.TextureLoader().load(`../images/artefact.png`);
-//         //   const material = new THREE.SpriteMaterial({ map: imgTexture });
-//         //   const sprite = new THREE.Sprite(material);
-//         //   sprite.scale.set(12, 12);
-//         //   // return sprite;
-//         //   return node.id === 'Artefact' ? sprite: null;
-//         // })
-//         .cameraPosition({ x: 200, y: 200, z: 200 })
-//         // .cameraPosition({ x: 200, y: 200, z: 200 })
-//         // .cameraPosition({ x: 200, y: 0, z: 200 })
-//         .onNodeClick(function () {
-//           window.location = "/manifesto";
-//         })
-//         // .width("auto")
-//         .height(375)
-//         .enableNavigationControls(false)
-
-//         // .nodeThreeObject((node) => {
-//         //   const sprite = new SpriteText(node.id);
-//         //   sprite.color =
-//         //     node.type === "roles"
-//         //       ? "#ff0000"
-//         //       : node.label === "Artefact"
-//         //       ? "blue"
-//         //       : "#000000";
-//         //   sprite.textHeight =
-//         //     node.type === "roles" ? 8 : node.label === "Artefact" ? 24 : 8;
-//         //   return sprite;
-//         // })
-//         .d3Force("link")
-//         .distance((link) => link.distance);
-//       let angle = 0;
-//       // auto rotating when zoom is not there..
-//       function rotate() {
-//         rotating = setInterval(() => {
-//           graph.cameraPosition({
-//             x: 300 * Math.sin(angle),
-//             y: 300 * Math.sin(angle),
-//             z: 350 * Math.cos(angle),
-//           });
-//           angle += Math.PI / 200;
-//         }, 50);
-//       }
-//       rotate();
-//       // var GraphCanvas = document.getElementsByTagName("canvas")[0];
-//       // let mouseClicked = false;
-
-//       // GraphCanvas.addEventListener("mousedown", function (e) {
-//       //   mouseClicked = true;
-
-//       //   if (window.event.which == 2) {
-//       //     graph.enableNavigationControls(false);
-//       //   }
-//       // });
-//       // trying to rotate without zooming
-//       // GraphCanvas.addEventListener("mousemove", function (e) {
-//       //   if (mouseClicked) {
-//       //     console.log(e.clientX);
-//       //     graph.cameraPosition({
-//       //       x: 200 * Math.sin(e.clientX),
-//       //     });
-//       //   }
-//       // });
-//       // GraphCanvas.addEventListener("mouseup", function (e) {
-//       //   mouseClicked = false;
-//       //   if (window.event.which == 2) {
-//       //     graph.enableNavigationControls(false);
-//       //     graph.enableNavigationControls(true);
-//       //   }
-//       // });
-//     }
-
-//     if (typeof window !== "undefined") {
-//       dynamicImportModule();
-//     }
-//   }, []);
-//   return (
-//     <div className="result">
-//       <div {...handlers} style={swipeOpenMenuStyles} />
-//       <SideBar
-//         isOpen={isOpen}
-//         onStateChange={s => setOpen(s.isOpen)}
-//         pageWrapId={"page-wrap"}
-//         outerContainerId={"App"}
-//       />
-//       <div className="graph">
-//         <div ref={ref}></div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Graph;
+export default Graph;
