@@ -14,8 +14,9 @@ function App() {
 	  });
 	
 	  const onSearch = async (text) => {
+
 		const results = await axios.get(
-			'http://localhost:5000/word/similarity/soft/10/0'
+			`http://localhost:5000/word/similarity/${text}/10/0`
 		  );
 	
 		setState(prevState => {
@@ -27,9 +28,7 @@ function App() {
       <BrowserRouter>
 				<Routes>
 					<Route path="/" element={<Main onSearch={onSearch}/>}></Route>
-					<Route path="/product/" element={<Product />}></Route>
-					<Route path="/graph/" element={<Graph />}></Route>
-					<Route path="/home/" element={<Home />}></Route>
+					<Route path="/graph/" element={<Graph onSearch={onSearch}/>}></Route>
 					{/* 상단에 위치하는 라우트들의 규칙을 모두 확인, 일치하는 라우트가 없는경우 처리 */}
 					{/* <Route path="*" element={<NotFound />}></Route> */}
 				</Routes>

@@ -59,7 +59,16 @@ function ValueLabelComponent(props) {
   const [searchText, setSearchText] = useState("");
   const [A, setA] = useState("");
   const [B, setB] = useState("");
+  const handleInput = (e) => {
+    const text = e.target.value
+    setSearchText(text)
+  }
 
+  const handleEnterKeyPressed = (e) => {
+    if(e.key=== 'Enter') {
+      onSearch(searchText)
+    }
+  }
   const { children, value } = props;
 
   return (
