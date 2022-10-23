@@ -8,7 +8,7 @@ import { SearchOutlined } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import styled,{ keyframes } from 'styled-components';
 
-import './Main.css';
+//import './Main.css';
 const gradient =keyframes`
 	0% {
 		background-position: 0% 50%;
@@ -48,7 +48,6 @@ const LogoSection = styled.div`
   }
 `;
 
-
 const SearchSection = styled.div`
   padding: 20px;
   display: flex;
@@ -72,7 +71,6 @@ const Search = styled.div`
   max-width: 584px;
 `;
 
-
 const ButtonSection = styled.div`
   display: flex;
   justify-content: center;
@@ -80,7 +78,6 @@ const ButtonSection = styled.div`
   padding-top: 18px;
   top: 53px;
   z-index: 0;
-
   button {
     background-color: #f8f9fa;
     border: 1px solid #f8f9fa;
@@ -106,7 +103,6 @@ const SearchIcon = styled.span`
   padding-right: 10px;
   display: flex;
   align-items: center;
-
   & svg {
     fill: #9aa0a6;
   }
@@ -140,17 +136,30 @@ const MicIcon = styled.div`
   width: 40px;
   line-height: 44px;
   height: 44px;
-
   svg {
     height: 24px;
     width: 24px;
     vertical-align: middle;
   }
 `;
+
+const ISVG = styled.svg`
+  color: #fff;
+  fill: currentColor;
+  width: 24px;
+  height: 24px;
+  padding: 10px;
+`;
+
+const IButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+`;
+
 const Main = (props) => {
-  const { 
-    onSearch 
-  } = props;
+  const { onSearch } = props;
 
   const [searchText, setSearchText] = useState('')
 
@@ -162,6 +171,7 @@ const Main = (props) => {
   const handleEnterKeyPressed = (e) => {
     if(e.key=== 'Enter') {
       onSearch(searchText)
+      window.location.href = `/graph/${searchText}`;
     }
   }
 
@@ -193,7 +203,9 @@ const Main = (props) => {
           </Search>
         </Form>
         <ButtonSection>
-          <Link to="/graph/"><button>확인하기</button></Link>
+           <Link to={`/graph/${searchText}`}>
+            <button>확인하기</button>
+          </Link>
         </ButtonSection>
       </SearchSection>
     </Container>
