@@ -229,6 +229,8 @@ export const Graph = (props) => {
           3000
         );
         setOpen((prev) => !prev);
+        dynamicColorinfo();
+        fetchImage(node);
       });
     // .onNodeRightClick((node) => {
     //   console.log(node);
@@ -240,8 +242,8 @@ export const Graph = (props) => {
     bloomPass.threshold = 0.1;
     Graph.postProcessingComposer().addPass(bloomPass);
   }
-  const imageUrl = `http://localhost:5000/image/dream/1`;
-  const fetchImage = async () => {
+  const fetchImage = async (word) => {
+    const imageUrl = `http://localhost:5000/image/${word.name}/1`;
     const res = await fetch(imageUrl);
     const imageBlob = await res.blob();
     const imageObjectURL = URL.createObjectURL(imageBlob);
@@ -263,7 +265,7 @@ export const Graph = (props) => {
     // if (typeof window !== "undefined") {
     //   dynamicImportModule();
     // }
-    fetchImage();
+    
     dynamicImportModule();
     dynamicColorinfo();
   }, []);
