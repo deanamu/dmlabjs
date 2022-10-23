@@ -49,7 +49,7 @@ const swipeOpenMenuStyles = {
 export const Graph = (props) => {
   const [open, setOpen] = React.useState(false);
   const [colors, setcolors] = useState([""]);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState([""]);
   const [base64, setBase64] = useState();
   const [img, setImg] = useState();
   const { onSearch, match } = props;
@@ -74,10 +74,11 @@ export const Graph = (props) => {
   function rgb(values) {
     return "rgb(" + values.join(", ") + ")";
   }
-  async function dynamicColorinfo() {
+  async function dynamicColorinfo(word) {
    
+    setcolors([""]);
     const colorsrgb = await axios.get(
-      `http://localhost:5000/color/harmony/dream/10/10`
+      `http://localhost:5000/color/harmony/${word.name}/10/10`
     );
    
     var j = 0;
@@ -85,10 +86,11 @@ export const Graph = (props) => {
     for (let i = 0; i < Object.keys(colorsrgb.data).length; i++) {
       console.log(colorsrgb.data[i]);
       for (let ji = 0; ji < colorsrgb.data[i].length; ji++) {
+        console.log(colorsrgb.data[i][ji]);
         colors.push(rgb(colorsrgb.data[i][ji]));
       }
     }
-   
+   setcolors(colors);
     // .onNodeRightClick((node) => {
     //   console.log(node);
     // });
@@ -229,8 +231,11 @@ export const Graph = (props) => {
           3000
         );
         setOpen((prev) => !prev);
-        dynamicColorinfo();
-        fetchImage(node);
+        dynamicColorinfo(node);
+        for(let i = 1;i<=10;i++)
+        {
+          fetchImage(node,i);
+        }
       });
     // .onNodeRightClick((node) => {
     //   console.log(node);
@@ -242,32 +247,19 @@ export const Graph = (props) => {
     bloomPass.threshold = 0.1;
     Graph.postProcessingComposer().addPass(bloomPass);
   }
-  const fetchImage = async (word) => {
-    const imageUrl = `http://localhost:5000/image/${word.name}/1`;
+  const fetchImage = async (word,index) => {
+    const imageUrl = `http://localhost:5000/image/${word.name}/${index}`;
     const res = await fetch(imageUrl);
     const imageBlob = await res.blob();
     const imageObjectURL = URL.createObjectURL(imageBlob);
-    setImg(imageObjectURL);
-    console.log(typeof(img));
+    image.push(imageObjectURL);
+    //setImg(imageObjectURL);
+    console.log(typeof(image));
   };
   useEffect(() => {
-    // axios
-    //   .get(
-    //     `http://localhost:5000/image/dream/1`,
-    //     {
-    //       responseType: "arraybuffer",
-    //     }
-    //   )
-    //   .then((response) =>
-    //     setBase64(Buffer.from(response.data, "binary").toString("base64"))
-    //   );
-
-    // if (typeof window !== "undefined") {
-    //   dynamicImportModule();
-    // }
     
     dynamicImportModule();
-    dynamicColorinfo();
+    
   }, []);
 
   return (
@@ -347,21 +339,36 @@ export const Graph = (props) => {
         <div>
           <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
             <SwiperSlide>
-              <img width={100} height={100} src={img} />
+              <img width={100} height={100} src={image[1]} />
             </SwiperSlide>
             <SwiperSlide>
-              <img src={`data:image/jpeg;charset=utf-8;base64,${base64}`} />
+              <img width={100} height={100} src={image[2]} />
             </SwiperSlide>
             <SwiperSlide>
-            <img src={`data:image/jpeg;charset=utf-8;base64,${base64}`} />
-              </SwiperSlide>
-            <SwiperSlide>Slide 3</SwiperSlide>
-            <SwiperSlide>Slide 4</SwiperSlide>
-            <SwiperSlide>Slide 5</SwiperSlide>
-            <SwiperSlide>Slide 6</SwiperSlide>
-            <SwiperSlide>Slide 7</SwiperSlide>
-            <SwiperSlide>Slide 8</SwiperSlide>
-            <SwiperSlide>Slide 9</SwiperSlide>
+              <img width={100} height={100} src={image[3]} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img width={100} height={100} src={image[4]} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img width={100} height={100} src={image[5]} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img width={100} height={100} src={image[6]} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img width={100} height={100} src={image[7]} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img width={100} height={100} src={image[8]} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img width={100} height={100} src={image[9]} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img width={100} height={100} src={image[10]} />
+            </SwiperSlide>
+
           </Swiper>
         </div>
       </SwipeableBottomSheet>
