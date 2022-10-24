@@ -47,9 +47,21 @@ const swipeOpenMenuStyles = {
   border: "2px dashed gray",
 };
 export const Graph = (props) => {
+  const [isOpen, setSOpen] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const [colors, setcolors] = useState([""]);
+  const [colors, setcolors] = useState([
+    [111, 222, 212],
+    [100, 150, 200],
+    [100, 120, 200],
+    [100, 140, 200],
+  ]);
   const [image, setImage] = useState([""]);
+  const [rgbs, setRgbs] = useState([
+    [111, 222, 212],
+    [100, 150, 200],
+    [100, 120, 200],
+    [100, 140, 200],
+  ]);
   const [base64, setBase64] = useState();
   const [img, setImg] = useState();
   const { onSearch, match } = props;
@@ -75,81 +87,33 @@ export const Graph = (props) => {
     return "rgb(" + values.join(", ") + ")";
   }
   async function dynamicColorinfo(word) {
-   
-    setcolors([""]);
+    //setcolors([""]);
     const colorsrgb = await axios.get(
       `http://localhost:5000/color/harmony/${word.name}/10/10`
     );
-   
-    var j = 0;
-    
-    for (let i = 0; i < Object.keys(colorsrgb.data).length; i++) {
-      console.log(colorsrgb.data[i]);
-      for (let ji = 0; ji < colorsrgb.data[i].length; ji++) {
-        console.log(colorsrgb.data[i][ji]);
-        colors.push(rgb(colorsrgb.data[i][ji]));
-      }
-    }
-   setcolors(colors);
+
+    // for (let i = 0; i < Object.keys(colorsrgb.data).length; i++) {
+    //   console.log(colorsrgb.data[i]);
+    //   for (let ji = 0; ji < colorsrgb.data[i].length; ji++) {
+    //     console.log(colorsrgb.data[i][ji]);
+    //     colors.push(rgb(colorsrgb.data[i][ji]));
+    //   }
+    // }
+    const colorsarray = Object.values(colorsrgb.data);
+    setcolors(colorsarray);
+    console.log(colorsrgb.data);
     // .onNodeRightClick((node) => {
     //   console.log(node);
     // });
   }
   async function dynamicImportModule() {
     const response = await axios.get(
-      `http://localhost:5000/word/similarity/dream/10/10`
-      //`http://localhost:5000/word/similarity/${searchtext}/10/10`
-      //"http://localhost:5555/most_similar_word/"
+      `http://localhost:5000/word/similarity/${search}/10/10`
     );
-    // const colorsrgb = await axios.get(
-    //   `http://localhost:5000/color/harmony/dream/10/10`
-    // );
-    // const imagedata = await axios.get(
-    //   //`http://localhost:5000/color/harmony/${search}/10/10`
-    //   `http://localhost:5000//image/dream/1`
-    // ).then((res) => {
-    //   const base64 = btoa(
-    //     new Uint8Array(res.data).reduce(
-    //       (data, byte) => data + String.fromCharCode(byte),
-    //       ""
-    //     )
-    //   );
-    //   setImage(base64);
-    // });
-    // const resonse = await axios
-    // .get(
-    //   `http://localhost:5000/image/dream/1`,
-    //   {
-    //     responseType: "arraybuffer",
-    //   }
-    // )
-    // .then((response) =>
-    //   setBase64(Buffer.from(response.data, "binary").toString("base64"))
-    // );
-    // const getImage = (i) => {
-    //   axios
-    //     .get(`http://localhost:5000/${search}/${i}`, {
-    //       responseType: "arraybuffer",
-    //     })
-    //     .then((res) => {
-    //       const base64 = btoa(
-    //         new Uint8Array(res.data).reduce(
-    //           (data, byte) => data + String.fromCharCode(byte),
-    //           ""
-    //         )
-    //       );
-    //       setImage(base64);
-    //     });
-    // };
+
     var j = 0;
-    //console.log(imagedata);
-    //console.log(imagedata.data);
-    //console.log(typeof imagedata.data);
-    //console.log(colorsrgb.data);
     console.log(response.data);
-    //console.log(resonse.data);
     for (var t of response.data) {
-      //node를 만들기 위해서 for문
       for (var t2 of t.result) {
         if (!(Object.values(nodedic).indexOf(t2.keyword) > -1)) {
           gData.nodes.push({
@@ -169,15 +133,6 @@ export const Graph = (props) => {
         gData.links.push({ source: t.keyword, target: t2.keyword });
       }
     }
-    // for (let i = 0; i < Object.keys(colorsrgb.data).length; i++) {
-    //   console.log(colorsrgb.data[i]);
-    //   for (let ji = 0; ji < colorsrgb.data[i].length; ji++) {
-    //     //console.log(colorsrgb.data[i][ji]);
-    //     //setcolors(colorsrgb.data[i][ji]);
-    //     //colors.push(rgb(colorsrgb.data[i][ji]));
-    //     colors.push(rgb(colorsrgb.data[i][ji]));
-    //   }
-    // }
     const Graph = ForceGraph3D({ controlType: "orbit" })(containerRef.current)
       .graphData(gData)
       //.graphData(data)
@@ -198,27 +153,10 @@ export const Graph = (props) => {
         sprite.textHeight = 8;
         return sprite;
       })
-      /**
-       * 4、Link styling
-       */
-      /* 边标签文字 */
+
       .linkThreeObjectExtend(true)
-      // .linkThreeObject((link) => {
-      //   const sprite = new SpriteText(`value：${link.value}`);
-      //   sprite.color = "lightgrey";
-      //   sprite.textHeight = 1.5;
-      //   return sprite;
-      // })
-      // .linkPositionUpdate((sprite, { start, end }) => {
-      //   const middlePos = Object.assign(
-      //     ...["x", "y", "z"].map((c) => ({
-      //       [c]: start[c] + (end[c] - start[c]) / 2, // calc middle point
-      //     }))
-      //   );
-      //   Object.assign(sprite.position, middlePos);
-      // })
+
       .onNodeClick((node) => {
-        // Aim at node from outside it
         const distance = 40;
         const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
         Graph.cameraPosition(
@@ -232,14 +170,14 @@ export const Graph = (props) => {
         );
         setOpen((prev) => !prev);
         dynamicColorinfo(node);
-        for(let i = 1;i<=10;i++)
-        {
-          fetchImage(node,i);
-        }
+        let restimage = [];
+        // for (let i = 1; i <= 10; i++) {
+        //   restimage.push(fetchImage(node, i));
+        // }
+        fetchImage(node);
+        setImage(restimage);
       });
-    // .onNodeRightClick((node) => {
-    //   console.log(node);
-    // });
+
     Graph.onEngineStop(() => Graph.zoomToFit(400));
     const bloomPass = new UnrealBloomPass();
     bloomPass.strength = 1;
@@ -247,23 +185,33 @@ export const Graph = (props) => {
     bloomPass.threshold = 0.1;
     Graph.postProcessingComposer().addPass(bloomPass);
   }
-  const fetchImage = async (word,index) => {
-    const imageUrl = `http://localhost:5000/image/${word.name}/${index}`;
-    const res = await fetch(imageUrl);
-    const imageBlob = await res.blob();
-    const imageObjectURL = URL.createObjectURL(imageBlob);
-    image.push(imageObjectURL);
-    //setImg(imageObjectURL);
-    console.log(typeof(image));
+  const fetchImage = async (word) => {
+    let restimage = [];
+    for (let i = 1; i <= 10; i++) {
+      const imageUrl = `http://localhost:5000/image/${word.name}/${i}`;
+      const res = await fetch(imageUrl);
+      const imageBlob = await res.blob();
+      const imageObjectURL = URL.createObjectURL(imageBlob);
+      restimage.push(imageObjectURL);
+    }
+    setImage(restimage);
+
+    //restimage.push(imageObjectURL);
+    //console.log(typeof image);
   };
   useEffect(() => {
-    
     dynamicImportModule();
-    
   }, []);
 
   return (
     <>
+    <div {...handlers} style={swipeOpenMenuStyles} />
+       <SideBar
+         isOpen={isOpen}
+         onStateChange={s => setSOpen(s.isOpen)}
+         pageWrapId={"page-wrap"}
+         outerContainerId={"App"}
+       />
       <Container>
         <div style={{ width: "100vw", height: "100vh" }} ref={containerRef} />
       </Container>
@@ -273,71 +221,31 @@ export const Graph = (props) => {
       >
         <div style={{ height: "710px" }}>
           <button onClick={() => setOpen((prev) => !prev)}>close</button>
-          <div>
-            <span style={{ background: `${colors[0]}` }}>1</span>
-            <span style={{ background: `${colors[1]}` }}>2</span>
-            <span style={{ background: `${colors[2]}` }}>3</span>
-            <span style={{ background: `${colors[3]}` }}>4</span>
-            <span style={{ background: `${colors[4]}` }}>5</span>
-            <span style={{ background: `${colors[5]}` }}>6</span>
-            <span style={{ background: `${colors[6]}` }}>7</span>
-            <span style={{ background: `${colors[7]}` }}>8</span>
-            <span style={{ background: `${colors[8]}` }}>9</span>
-            <span style={{ background: `${colors[9]}` }}>10</span>
-          </div>
-          <div>
-            <span style={{ background: `${colors[10]}` }}>1</span>
-            <span style={{ background: `${colors[11]}` }}>2</span>
-            <span style={{ background: `${colors[12]}` }}>3</span>
-            <span style={{ background: `${colors[13]}` }}>4</span>
-            <span style={{ background: `${colors[14]}` }}>5</span>
-            <span style={{ background: `${colors[15]}` }}>6</span>
-            <span style={{ background: `${colors[16]}` }}>7</span>
-            <span style={{ background: `${colors[17]}` }}>8</span>
-            <span style={{ background: `${colors[18]}` }}>9</span>
-            <span style={{ background: `${colors[19]}` }}>10</span>
-          </div>
-          <div style={{ width: "100%" }}>
-            <span style={{ background: `${colors[20]}`, width: "100px" }}>
-              1
-            </span>
-            <span style={{ background: `${colors[21]}` }}>2</span>
-            <span style={{ background: `${colors[22]}` }}>3</span>
-            <span style={{ background: `${colors[23]}` }}>4</span>
-            <span style={{ background: `${colors[24]}` }}>5</span>
-            <span style={{ background: `${colors[25]}` }}>6</span>
-            <span style={{ background: `${colors[26]}` }}>7</span>
-            <span style={{ background: `${colors[27]}` }}>8</span>
-            <span style={{ background: `${colors[28]}` }}>9</span>
-            <span style={{ background: `${colors[29]}` }}>10</span>
-          </div>
-          <div>
-            <span style={{ background: `${colors[30]}` }}>1</span>
-            <span style={{ background: `${colors[31]}` }}>2</span>
-            <span style={{ background: `${colors[32]}` }}>3</span>
-            <span style={{ background: `${colors[33]}` }}>4</span>
-            <span style={{ background: `${colors[34]}` }}>5</span>
-            <span style={{ background: `${colors[35]}` }}>6</span>
-            <span style={{ background: `${colors[36]}` }}>7</span>
-            <span style={{ background: `${colors[37]}` }}>8</span>
-            <span style={{ background: `${colors[38]}` }}>9</span>
-            <span style={{ background: `${colors[39]}` }}>10</span>
-          </div>
-          <div>
-            <span style={{ background: `${colors[40]}` }}>1</span>
-            <span style={{ background: `${colors[41]}` }}>2</span>
-            <span style={{ background: `${colors[42]}` }}>3</span>
-            <span style={{ background: `${colors[43]}` }}>4</span>
-            <span style={{ background: `${colors[44]}` }}>5</span>
-            <span style={{ background: `${colors[45]}` }}>6</span>
-            <span style={{ background: `${colors[46]}` }}>7</span>
-            <span style={{ background: `${colors[47]}` }}>8</span>
-            <span style={{ background: `${colors[48]}` }}>9</span>
-            <span style={{ background: `${colors[49]}` }}>10</span>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {colors.map((item) => {
+              return (
+                <div style={{ display: "flex" }}>
+                  {item.map((rgb) => {
+                    return (
+                      <div
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          backgroundColor: `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`,
+                        }}
+                      ></div>
+                    );
+                  })}
+                </div>
+              );
+            })}
           </div>
         </div>
         <div>
           <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
+            <SwiperSlide>
+              <img width={100} height={100} src={image[0]} />
+            </SwiperSlide>
             <SwiperSlide>
               <img width={100} height={100} src={image[1]} />
             </SwiperSlide>
@@ -365,25 +273,10 @@ export const Graph = (props) => {
             <SwiperSlide>
               <img width={100} height={100} src={image[9]} />
             </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[10]} />
-            </SwiperSlide>
-
           </Swiper>
         </div>
       </SwipeableBottomSheet>
     </>
-    // <div className="result">
-    //   <div {...handlers} style={swipeOpenMenuStyles} />
-    //   <SideBar
-    //     isOpen={isOpen}
-    //     onStateChange={(s) => setOpen(s.isOpen)}
-    //     pageWrapId={"page-wrap"}
-    //     outerContainerId={"App"}
-    //   />
-    // </div>
-    // <div className="result">
-    // </div>
   );
 };
 
