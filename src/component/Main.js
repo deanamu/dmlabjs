@@ -1,15 +1,10 @@
-import React from 'react';
+import React from "react";
 import { useState } from "react";
-import { Link } from 'react-router-dom';
-import TextField from "@mui/material/TextField";
-import IconButton from '@mui/material/Icon';
-import InputAdornment from '@mui/material/InputAdornment';
-import { SearchOutlined } from '@mui/icons-material';
-import { Button } from '@mui/material';
-import styled,{ keyframes } from 'styled-components';
+import { Link } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
 
-//import './Main.css';
-const gradient =keyframes`
+//import "./Main.css";
+const gradient = keyframes`
 	0% {
 		background-position: 0% 50%;
 	}
@@ -28,7 +23,7 @@ const LogoSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
   min-height: 50vh;
   height: calc(100% - 560px);
@@ -125,24 +120,6 @@ const SearchInput = styled.input`
   font-size: 16px;
 `;
 
-const MicIcon = styled.div`
-  display: flex;
-  cursor: pointer;
-  align-items: center;
-  border: 0;
-  background: transparent;
-  outline: none;
-  padding: 0 8px;
-  width: 40px;
-  line-height: 44px;
-  height: 44px;
-  svg {
-    height: 24px;
-    width: 24px;
-    vertical-align: middle;
-  }
-`;
-
 const ISVG = styled.svg`
   color: #fff;
   fill: currentColor;
@@ -161,55 +138,69 @@ const IButton = styled.button`
 const Main = (props) => {
   const { onSearch } = props;
 
-  const [searchText, setSearchText] = useState('')
+  const [searchText, setSearchText] = useState("");
 
   const handleInput = (e) => {
-    const text = e.target.value
-    setSearchText(text)
-  }
+    const text = e.target.value;
+    setSearchText(text);
+  };
 
   const handleEnterKeyPressed = (e) => {
-    if(e.key=== 'Enter') {
-      onSearch(searchText)
-      window.location.href = `/graph/${searchText}`;
+    if (e.key === "Enter") {
+      <Link to={`/graph/${searchText}/10/10`}></Link>;
     }
-  }
+  };
 
-	return (
+  return (
     <Container>
       <LogoSection>
         {/* <img
-          src='https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'
-          alt='google-logo'
+          src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+          alt="google-logo"
         /> */}
-         <h3>color emotions</h3>
-         <h1>단어를 검색해 보세요</h1>
+        <h3>color emotions</h3>
+        <h1>단어를 검색해 보세요</h1>
       </LogoSection>
       <SearchSection>
-        <Form action='/' method='GET' role='search'>
+        <Form action="/" method="GET" role="search">
           <Search>
-            <SearchInput type='text' onChange={handleInput}
-          onKeyPress={handleEnterKeyPressed}  value={searchText}/>
-          <button type="submit"><i class="fa fa-search"></i></button>
-            <SearchIcon>
+            <SearchInput
+              type="text"
+              onChange={handleInput}
+              onKeyPress={handleEnterKeyPressed}
+              value={searchText}
+            />
+            {/* <IButton>
               <svg
-                focusable='false'
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 24 24'
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
               >
-                <path d='M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z' />
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
               </svg>
+            </IButton> */}
+            <SearchIcon>
+              <Link to={`/graph/${searchText}/10/10`}>
+                <IButton>
+                  <svg viewBox="0 0 1024 1024">
+                    <path
+                      class="path1"
+                      d="M848.471 928l-263.059-263.059c-48.941 36.706-110.118 55.059-177.412 55.059-171.294 0-312-140.706-312-312s140.706-312 312-312c171.294 0 312 140.706 312 312 0 67.294-24.471 128.471-55.059 177.412l263.059 263.059-79.529 79.529zM189.623 408.078c0 121.364 97.091 218.455 218.455 218.455s218.455-97.091 218.455-218.455c0-121.364-103.159-218.455-218.455-218.455-121.364 0-218.455 97.091-218.455 218.455z"
+                    ></path>
+                  </svg>
+                </IButton>
+              </Link>
             </SearchIcon>
           </Search>
         </Form>
-        <ButtonSection>
-           <Link to={`/graph/${searchText}`}>
+        {/* <ButtonSection>
+          <Link to={`/graph/${searchText}/10/10`}>
             <button>확인하기</button>
           </Link>
-        </ButtonSection>
+        </ButtonSection> */}
       </SearchSection>
     </Container>
-	);
+  );
 };
 
 export default Main;

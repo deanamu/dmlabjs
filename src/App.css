@@ -126,3 +126,7 @@ button {
   right: 0;
   left: 48%;
 } */
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}

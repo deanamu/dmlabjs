@@ -2,23 +2,16 @@ import React from "react";
 import Slider, { SliderThumb } from "@mui/material/Slider";
 import { createRef, useEffect, useState, useRef } from "react";
 import ForceGraph3D from "3d-force-graph";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/Icon";
-import InputAdornment from "@mui/material/InputAdornment";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
 import { SearchOutlined } from "@mui/icons-material";
 //import data from "./data";
 import { useSwipeable } from "react-swipeable";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
-//import * as d3 from "d3";
-//import IconButton from '@mui/material/Icon/s';
 import "../assets/styles/graph.css";
 import SideBar from "./sidebar";
 // import SpriteText from "three-spritetext";
@@ -26,10 +19,10 @@ import SideBar from "./sidebar";
 // import * as THREE from '//cdn.rawgit.com/mrdoob/three.js/master/examples/jsm/renderers/CSS2DRenderer.js';
 // import * as THREE from '../utils/three';
 import axios from "axios";
-import * as THREE from "three";
 import SpriteText from "three-spritetext";
 import { useParams } from "react-router-dom";
 import { Navigation } from "swiper";
+import Sidebar from "./sidebar";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -39,6 +32,7 @@ const ColorSpan = styled.span`
   height: 40px;
   flex-direction: column;
 `;
+
 const swipeOpenMenuStyles = {
   float: "left",
   position: "fixed",
@@ -47,7 +41,6 @@ const swipeOpenMenuStyles = {
   border: "2px dashed gray",
 };
 export const Graph = (props) => {
-  const [isOpen, setSOpen] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [colors, setcolors] = useState([
     [111, 222, 212],
@@ -71,44 +64,32 @@ export const Graph = (props) => {
     nodes: [],
     links: [],
   };
-  const { search } = useParams();
+  const { search, a, b } = useParams();
   console.log(search);
+  console.log(a);
+  console.log(b);
   var nodedic = {};
   const handlers = useSwipeable({
     //trackMouse: true,
     onSwipedRight: () => setOpen(true),
   });
   const containerRef = useRef(null);
-  // const response = await axios.get(
-  //   "http://localhost:5000/word/similarity/dream/10/10"
-  //   //"http://localhost:5555/most_similar_word/"
-  // );
-  function rgb(values) {
-    return "rgb(" + values.join(", ") + ")";
-  }
   async function dynamicColorinfo(word) {
     //setcolors([""]);
     const colorsrgb = await axios.get(
       `http://localhost:5000/color/harmony/${word.name}/10/10`
     );
 
-    // for (let i = 0; i < Object.keys(colorsrgb.data).length; i++) {
-    //   console.log(colorsrgb.data[i]);
-    //   for (let ji = 0; ji < colorsrgb.data[i].length; ji++) {
-    //     console.log(colorsrgb.data[i][ji]);
-    //     colors.push(rgb(colorsrgb.data[i][ji]));
-    //   }
-    // }
     const colorsarray = Object.values(colorsrgb.data);
     setcolors(colorsarray);
-    console.log(colorsrgb.data);
+    //console.log(colorsrgb.data);
     // .onNodeRightClick((node) => {
     //   console.log(node);
     // });
   }
   async function dynamicImportModule() {
     const response = await axios.get(
-      `http://localhost:5000/word/similarity/${search}/10/10`
+      `http://localhost:5000/word/similarity/${search}/${a}/${b}`
     );
 
     var j = 0;
@@ -171,9 +152,6 @@ export const Graph = (props) => {
         setOpen((prev) => !prev);
         dynamicColorinfo(node);
         let restimage = [];
-        // for (let i = 1; i <= 10; i++) {
-        //   restimage.push(fetchImage(node, i));
-        // }
         fetchImage(node);
         setImage(restimage);
       });
@@ -195,87 +173,88 @@ export const Graph = (props) => {
       restimage.push(imageObjectURL);
     }
     setImage(restimage);
-
-    //restimage.push(imageObjectURL);
-    //console.log(typeof image);
   };
   useEffect(() => {
     dynamicImportModule();
-  }, []);
+  }, [search, a, b]);
 
   return (
     <>
-    <div {...handlers} style={swipeOpenMenuStyles} />
-       <SideBar
-         isOpen={isOpen}
-         onStateChange={s => setSOpen(s.isOpen)}
-         pageWrapId={"page-wrap"}
-         outerContainerId={"App"}
-       />
-      <Container>
-        <div style={{ width: "100vw", height: "100vh" }} ref={containerRef} />
-      </Container>
-      <SwipeableBottomSheet
-        open={open}
-        onChange={() => setOpen((prev) => !prev)}
-      >
-        <div style={{ height: "710px" }}>
-          <button onClick={() => setOpen((prev) => !prev)}>close</button>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {colors.map((item) => {
-              return (
-                <div style={{ display: "flex" }}>
-                  {item.map((rgb) => {
-                    return (
-                      <div
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          backgroundColor: `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`,
-                        }}
-                      ></div>
-                    );
-                  })}
-                </div>
-              );
-            })}
+      <div>
+        <SideBar
+          pageWrapId={"page-wrap"}
+          outerContainerId={"App"}
+          onSearch={search}
+        />
+        <Container>
+          <div style={{ width: "100vw", height: "100vh" }} ref={containerRef} />
+        </Container>
+        <SwipeableBottomSheet
+          open={open}
+          onChange={() => setOpen((prev) => !prev)}
+        >
+          <div style={{ height: "710px" }}>
+            <button onClick={() => setOpen((prev) => !prev)}>close</button>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {colors.map((item) => {
+                return (
+                  <div style={{ display: "flex" }}>
+                    {item.map((rgb) => {
+                      return (
+                        <div
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor: `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`,
+                          }}
+                        ></div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-        <div>
-          <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
-            <SwiperSlide>
-              <img width={100} height={100} src={image[0]} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[1]} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[2]} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[3]} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[4]} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[5]} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[6]} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[7]} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[8]} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img width={100} height={100} src={image[9]} />
-            </SwiperSlide>
-          </Swiper>
-        </div>
-      </SwipeableBottomSheet>
+          <div>
+            <Swiper
+              navigation={true}
+              modules={[Navigation]}
+              className="mySwiper"
+            >
+              <SwiperSlide>
+                <img width={100} height={100} src={image[0]} />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img width={100} height={100} src={image[1]} />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img width={100} height={100} src={image[2]} />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img width={100} height={100} src={image[3]} />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img width={100} height={100} src={image[4]} />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img width={100} height={100} src={image[5]} />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img width={100} height={100} src={image[6]} />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img width={100} height={100} src={image[7]} />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img width={100} height={100} src={image[8]} />
+              </SwiperSlide>
+              <SwiperSlide>
+                <img width={100} height={100} src={image[9]} />
+              </SwiperSlide>
+            </Swiper>
+          </div>
+        </SwipeableBottomSheet>
+      </div>
     </>
   );
 };
