@@ -1,10 +1,10 @@
 import React from "react";
-import Slider, { SliderThumb } from "@mui/material/Slider";
+//import Slider, { SliderThumb } from "@mui/material/Slider";
 import { createRef, useEffect, useState, useRef } from "react";
 import ForceGraph3D from "3d-force-graph";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
-import { SearchOutlined } from "@mui/icons-material";
+//import { SearchOutlined } from "@mui/icons-material";
 //import data from "./data";
 import { useSwipeable } from "react-swipeable";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
@@ -22,7 +22,7 @@ import axios from "axios";
 import SpriteText from "three-spritetext";
 import { useParams } from "react-router-dom";
 import { Navigation } from "swiper";
-import Sidebar from "./sidebar";
+//import Sidebar from "./sidebar";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -55,7 +55,12 @@ export const Graph = (props) => {
     [100, 120, 200],
     [100, 140, 200],
   ]);
-  const [base64, setBase64] = useState();
+
+  const [select, setselect] = useState("");
+  const [colorimage, setColorimage] = useState({
+    color: [111, 222, 212],
+    image: " ",
+  });
   const [img, setImg] = useState();
   const { onSearch, match } = props;
   const ref = createRef();
@@ -154,6 +159,7 @@ export const Graph = (props) => {
         let restimage = [];
         fetchImage(node);
         setImage(restimage);
+        setselect(node.name);
       });
 
     Graph.onEngineStop(() => Graph.zoomToFit(400));
@@ -194,7 +200,33 @@ export const Graph = (props) => {
           onChange={() => setOpen((prev) => !prev)}
         >
           <div style={{ height: "710px" }}>
-            <button onClick={() => setOpen((prev) => !prev)}>close</button>
+          <text>선택하신 단어는 {select} 입니다</text>
+          <br/>
+            <text>마음에 드시는 배색을 사용해 보세요 </text>
+            <button onClick={() => setOpen((prev) => !prev)}>
+              <svg
+                viewPort="0 0 12 12"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="1"
+                  y1="11"
+                  x2="11"
+                  y2="1"
+                  stroke="black"
+                  stroke-width="2"
+                />
+                <line
+                  x1="1"
+                  y1="1"
+                  x2="11"
+                  y2="11"
+                  stroke="black"
+                  stroke-width="2"
+                />
+              </svg>
+            </button>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {colors.map((item) => {
                 return (
@@ -216,6 +248,7 @@ export const Graph = (props) => {
             </div>
           </div>
           <div>
+          <text> {select} 관련된 그림입니다 </text>
             <Swiper
               navigation={true}
               modules={[Navigation]}
