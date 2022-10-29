@@ -1,28 +1,17 @@
 import React from "react";
-//import Slider, { SliderThumb } from "@mui/material/Slider";
 import { createRef, useEffect, useState, useRef } from "react";
 import ForceGraph3D from "3d-force-graph";
-import { Swiper, SwiperSlide } from "swiper/react";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
-//import { SearchOutlined } from "@mui/icons-material";
-//import data from "./data";
 import { useSwipeable } from "react-swipeable";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import styled from "styled-components";
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "../assets/styles/graph.css";
 import SideBar from "./sidebar";
-// import SpriteText from "three-spritetext";
-// import * as THREE from '../utils/css2D';
-// import * as THREE from '//cdn.rawgit.com/mrdoob/three.js/master/examples/jsm/renderers/CSS2DRenderer.js';
-// import * as THREE from '../utils/three';
 import axios from "axios";
 import SpriteText from "three-spritetext";
 import { useParams } from "react-router-dom";
-import { Navigation } from "swiper";
-//import Sidebar from "./sidebar";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -31,6 +20,12 @@ const Container = styled.div`
 const ColorSpan = styled.span`
   height: 40px;
   flex-direction: column;
+`;
+
+const CButton = styled.button`
+  position: relative;
+  top: 28px;
+  left: 650px;
 `;
 
 const swipeOpenMenuStyles = {
@@ -42,26 +37,16 @@ const swipeOpenMenuStyles = {
 };
 export const Graph = (props) => {
   const [open, setOpen] = React.useState(false);
-  const [colors, setcolors] = useState([
-    [111, 222, 212],
-    [100, 150, 200],
-    [100, 120, 200],
-    [100, 140, 200],
-  ]);
-  const [image, setImage] = useState([""]);
-  const [rgbs, setRgbs] = useState([
-    [111, 222, 212],
-    [100, 150, 200],
-    [100, 120, 200],
-    [100, 140, 200],
-  ]);
-
-  const [select, setselect] = useState("");
-  const [colorimage, setColorimage] = useState({
-    color: [111, 222, 212],
-    image: " ",
+  const [messageObj, setMessage] = useState({
+    rgb: [
+      [111, 222, 212],
+      [100, 150, 200],
+      [100, 120, 200],
+      [100, 140, 200],
+      [100, 140, 200],
+    ],
+    image: [""],
   });
-  const [img, setImg] = useState();
   const { onSearch, match } = props;
   const ref = createRef();
   //const [isOpen, setOpen] = React.useState(false);
@@ -84,9 +69,24 @@ export const Graph = (props) => {
     const colorsrgb = await axios.get(
       `http://localhost:5000/color/harmony/${word.name}/10/10`
     );
-
+    let restimage = [];
+    for (let i = 1; i <= 10; i++) {
+      const imageUrl = `http://localhost:5000/image/${word.name}/${i}`;
+      const res = await fetch(imageUrl);
+      const imageBlob = await res.blob();
+      const imageObjectURL = URL.createObjectURL(imageBlob);
+      restimage.push(imageObjectURL);
+    }
     const colorsarray = Object.values(colorsrgb.data);
-    setcolors(colorsarray);
+    console.log("--------------");
+    console.log(colorsarray);
+    console.log(typeof colorsarray);
+    console.log("--------------");
+    setMessage({
+      rgb: colorsarray,
+      image: restimage,
+    });
+    //setMessage((rgbs = colorsarray), (image = restimage));
     //console.log(colorsrgb.data);
     // .onNodeRightClick((node) => {
     //   console.log(node);
@@ -156,10 +156,6 @@ export const Graph = (props) => {
         );
         setOpen((prev) => !prev);
         dynamicColorinfo(node);
-        let restimage = [];
-        fetchImage(node);
-        setImage(restimage);
-        setselect(node.name);
       });
 
     Graph.onEngineStop(() => Graph.zoomToFit(400));
@@ -169,21 +165,9 @@ export const Graph = (props) => {
     bloomPass.threshold = 0.1;
     Graph.postProcessingComposer().addPass(bloomPass);
   }
-  const fetchImage = async (word) => {
-    let restimage = [];
-    for (let i = 1; i <= 10; i++) {
-      const imageUrl = `http://localhost:5000/image/${word.name}/${i}`;
-      const res = await fetch(imageUrl);
-      const imageBlob = await res.blob();
-      const imageObjectURL = URL.createObjectURL(imageBlob);
-      restimage.push(imageObjectURL);
-    }
-    setImage(restimage);
-  };
   useEffect(() => {
     dynamicImportModule();
   }, [search, a, b]);
-
   return (
     <>
       <div>
@@ -200,10 +184,7 @@ export const Graph = (props) => {
           onChange={() => setOpen((prev) => !prev)}
         >
           <div style={{ height: "710px" }}>
-          <text>선택하신 단어는 {select} 입니다</text>
-          <br/>
-            <text>마음에 드시는 배색을 사용해 보세요 </text>
-            <button onClick={() => setOpen((prev) => !prev)}>
+            <CButton onClick={() => setOpen((prev) => !prev)}>
               <svg
                 viewPort="0 0 12 12"
                 version="1.1"
@@ -226,65 +207,27 @@ export const Graph = (props) => {
                   stroke-width="2"
                 />
               </svg>
-            </button>
+            </CButton>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              {colors.map((item) => {
+              {messageObj.rgb.map((item,i) => {
                 return (
-                  <div style={{ display: "flex" }}>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
                     {item.map((rgb) => {
                       return (
                         <div
                           style={{
-                            width: "20px",
-                            height: "20px",
+                            width: "60px",
+                            height: "60px",
                             backgroundColor: `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`,
                           }}
                         ></div>
                       );
                     })}
+                     <img width={100} height={100} src={messageObj.image[i]} />;
                   </div>
                 );
               })}
             </div>
-          </div>
-          <div>
-          <text> {select} 관련된 그림입니다 </text>
-            <Swiper
-              navigation={true}
-              modules={[Navigation]}
-              className="mySwiper"
-            >
-              <SwiperSlide>
-                <img width={100} height={100} src={image[0]} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img width={100} height={100} src={image[1]} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img width={100} height={100} src={image[2]} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img width={100} height={100} src={image[3]} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img width={100} height={100} src={image[4]} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img width={100} height={100} src={image[5]} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img width={100} height={100} src={image[6]} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img width={100} height={100} src={image[7]} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img width={100} height={100} src={image[8]} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img width={100} height={100} src={image[9]} />
-              </SwiperSlide>
-            </Swiper>
           </div>
         </SwipeableBottomSheet>
       </div>
