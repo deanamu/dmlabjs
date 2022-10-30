@@ -23,9 +23,16 @@ const ColorSpan = styled.span`
 `;
 
 const CButton = styled.button`
-  position: relative;
-  top: 28px;
-  left: 650px;
+position: absolute;
+border:0;
+outline:0;
+width: 50px;
+height: 50px;
+color: black;
+background: transparent;
+top: 0px;
+right: 10px;
+font-Size: 20px;
 `;
 
 const swipeOpenMenuStyles = {
@@ -78,10 +85,10 @@ export const Graph = (props) => {
       restimage.push(imageObjectURL);
     }
     const colorsarray = Object.values(colorsrgb.data);
-    console.log("--------------");
-    console.log(colorsarray);
-    console.log(typeof colorsarray);
-    console.log("--------------");
+    // console.log("--------------");
+    // console.log(colorsarray);
+    // console.log(typeof colorsarray);
+    // console.log("--------------");
     setMessage({
       rgb: colorsarray,
       image: restimage,
@@ -184,8 +191,8 @@ export const Graph = (props) => {
           onChange={() => setOpen((prev) => !prev)}
         >
           <div style={{ height: "710px" }}>
-            <CButton onClick={() => setOpen((prev) => !prev)}>
-              <svg
+            <CButton onClick={() => setOpen((prev) => !prev)} textStyle={{ fontSize: 20 }}>
+              {/* <svg
                 viewPort="0 0 12 12"
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
@@ -206,12 +213,13 @@ export const Graph = (props) => {
                   stroke="black"
                   stroke-width="2"
                 />
-              </svg>
+              </svg> */}
+              X
             </CButton>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {messageObj.rgb.map((item,i) => {
                 return (
-                  <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div style={{ display: "flex", justifyContent: "center"}}>
                     {item.map((rgb) => {
                       return (
                         <div
@@ -223,7 +231,12 @@ export const Graph = (props) => {
                         ></div>
                       );
                     })}
-                     <img width={100} height={100} src={messageObj.image[i]} />;
+                    <div style={{
+                             width: "120px",
+                             height: "20px",
+                             backgroundColor: 'transparent',
+                           }}></div>
+                    <img width={100} height={100} src={messageObj.image[i]} />
                   </div>
                 );
               })}
