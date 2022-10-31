@@ -1,8 +1,8 @@
 import React from "react";
-import { createRef, useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import ForceGraph3D from "3d-force-graph";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
-import { useSwipeable } from "react-swipeable";
+//import { useSwipeable } from "react-swipeable";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import styled from "styled-components";
 import "swiper/css";
@@ -17,10 +17,10 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const ColorSpan = styled.span`
-  height: 40px;
-  flex-direction: column;
-`;
+// const ColorSpan = styled.span`
+//   height: 40px;
+//   flex-direction: column;
+// `;
 
 const CButton = styled.button`
 position: absolute;
@@ -35,13 +35,13 @@ right: 10px;
 font-Size: 20px;
 `;
 
-const swipeOpenMenuStyles = {
-  float: "left",
-  position: "fixed",
-  width: "33%",
-  height: "100%",
-  border: "2px dashed gray",
-};
+// const swipeOpenMenuStyles = {
+//   float: "left",
+//   position: "fixed",
+//   width: "33%",
+//   height: "100%",
+//   border: "2px dashed gray",
+// };
 export const Graph = (props) => {
   const [open, setOpen] = React.useState(false);
   const [messageObj, setMessage] = useState({
@@ -54,8 +54,8 @@ export const Graph = (props) => {
     ],
     image: [""],
   });
-  const { onSearch, match } = props;
-  const ref = createRef();
+  //const { onSearch, match } = props;
+  //const ref = createRef();
   //const [isOpen, setOpen] = React.useState(false);
   var gData = {
     nodes: [],
@@ -66,10 +66,10 @@ export const Graph = (props) => {
   console.log(a);
   console.log(b);
   var nodedic = {};
-  const handlers = useSwipeable({
-    //trackMouse: true,
-    onSwipedRight: () => setOpen(true),
-  });
+  // const handlers = useSwipeable({
+  //   //trackMouse: true,
+  //   onSwipedRight: () => setOpen(true),
+  // });
   const containerRef = useRef(null);
   async function dynamicColorinfo(word) {
     //setcolors([""]);
@@ -191,41 +191,19 @@ export const Graph = (props) => {
           onChange={() => setOpen((prev) => !prev)}
         >
           <div style={{ height: "710px" }}>
-            <CButton onClick={() => setOpen((prev) => !prev)} textStyle={{ fontSize: 20 }}>
-              {/* <svg
-                viewPort="0 0 12 12"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line
-                  x1="1"
-                  y1="11"
-                  x2="11"
-                  y2="1"
-                  stroke="black"
-                  stroke-width="2"
-                />
-                <line
-                  x1="1"
-                  y1="1"
-                  x2="11"
-                  y2="11"
-                  stroke="black"
-                  stroke-width="2"
-                />
-              </svg> */}
+            <CButton onClick={() => setOpen((prev) => !prev)} >
               X
             </CButton>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {messageObj.rgb.map((item,i) => {
                 return (
-                  <div style={{ display: "flex", justifyContent: "center"}}>
+                  <div style={{ display: "flex", justifyContent: "center", padding:"40px"}}>
                     {item.map((rgb) => {
                       return (
                         <div
                           style={{
-                            width: "60px",
-                            height: "60px",
+                            width: "100px",
+                            height: "100px",
                             backgroundColor: `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`,
                           }}
                         ></div>
@@ -236,7 +214,7 @@ export const Graph = (props) => {
                              height: "20px",
                              backgroundColor: 'transparent',
                            }}></div>
-                    <img width={100} height={100} src={messageObj.image[i]} />
+                    <img width={100} height={100} src={messageObj.image[i]} alt={i}/>
                   </div>
                 );
               })}

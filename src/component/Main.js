@@ -20,8 +20,10 @@ const Container = styled.div`
   flex-direction: column;
 `;
 const LogoSection = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
+  text-align: left;
   align-items: center;
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
@@ -135,6 +137,22 @@ const IButton = styled.button`
   height: 44px;
 `;
 
+const H3Title = styled.text`
+  position: absolute;
+  top: 0px;
+  left: 10px;
+  color: #fff;
+  textalign: "left";
+`;
+const H1Title = styled.h1`
+margin: 0;
+position: absolute;
+top: 85%;
+left: 50%;
+margin-right: -50%;
+color: #fff;
+transform: translate(-50%, -50%)
+`;
 const Main = (props) => {
   const { onSearch } = props;
 
@@ -158,8 +176,8 @@ const Main = (props) => {
           src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
           alt="google-logo"
         /> */}
-        <h3>color emotions</h3>
-        <h1>단어를 검색해 보세요</h1>
+        <H3Title>color emotions</H3Title>
+        <H1Title>단어를 검색해 보세요</H1Title>
       </LogoSection>
       <SearchSection>
         <Form action="/" method="GET" role="search">

@@ -22,6 +22,7 @@ function Colorimage(props) {
                          ></div>
                        );
                      })}
+                    
                     <img width={100} height={100} src={props.element.image[i]} />;
                    </div>
                  );
