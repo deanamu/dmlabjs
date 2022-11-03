@@ -74,11 +74,12 @@ export const Graph = (props) => {
   async function dynamicColorinfo(word) {
     //setcolors([""]);
     const colorsrgb = await axios.get(
-      `http://localhost:5000/color/harmony/${word.name}/10/10`
+      `http://dmlab-color.com:5000/color/harmony/${word.name}/10/10`
+      //`http://localhost:5000/color/harmony/${word.name}/10/10`
     );
     let restimage = [];
     for (let i = 1; i <= 10; i++) {
-      const imageUrl = `http://localhost:5000/image/${word.name}/${i}`;
+      const imageUrl = `http://dmlab-color.com:5000/image/${word.name}/${i}`;
       const res = await fetch(imageUrl);
       const imageBlob = await res.blob();
       const imageObjectURL = URL.createObjectURL(imageBlob);
@@ -101,7 +102,7 @@ export const Graph = (props) => {
   }
   async function dynamicImportModule() {
     const response = await axios.get(
-      `http://localhost:5000/word/similarity/${search}/${a}/${b}`
+      `http://dmlab-color.com:5000/word/similarity/${search}/${a}/${b}`
     );
 
     var j = 0;
